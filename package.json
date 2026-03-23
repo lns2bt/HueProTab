@@ -1,0 +1,11 @@
+{
+  "name": "hueprotab",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Single-file Philips Hue dashboard for Chrome on Windows and Android.",
+  "scripts": {
+    "build": "node scripts/build-single-html.mjs",
+    "test": "node --test",
+    "validate": "node scripts/validate-dist.mjs"
+  }
+}
