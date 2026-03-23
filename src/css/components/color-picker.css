@@ -1,0 +1,6 @@
+.color-picker-placeholder {
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1px dashed var(--panel-border);
+  background: linear-gradient(90deg, #ff4d6d, #ffd166, #2dd4bf, #60a5fa, #a78bfa);
+}

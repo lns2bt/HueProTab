@@ -1,0 +1,17 @@
+.panel,
+.card,
+.dashboard-section {
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  background: rgba(21, 29, 51, 0.88);
+  box-shadow: var(--shadow);
+}
+
+.panel {
+  padding: 24px;
+}
+
+.dashboard-section,
+.card {
+  padding: 18px;
+}

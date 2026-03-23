@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HueProTab</title>
+    <style>
+/* src/css/base.css */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #121933, var(--bg) 62%);
+  color: var(--text);
+}
+
+body {
+  padding: 24px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+p {
+  color: var(--muted);
+}
+
+/* src/css/components/cards.css */
+.panel,
+.card,
+.dashboard-section {
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  background: rgba(21, 29, 51, 0.88);
+  box-shadow: var(--shadow);
+}
+
+.panel {
+  padding: 24px;
+}
+
+.dashboard-section,
+.card {
+  padding: 18px;
+}
+
+/* src/css/components/color-picker.css */
+.color-picker-placeholder {
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1px dashed var(--panel-border);
+  background: linear-gradient(90deg, #ff4d6d, #ffd166, #2dd4bf, #60a5fa, #a78bfa);
+}
+
+/* src/css/components/controls.css */
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: var(--accent);
+  color: white;
+}
+
+/* src/css/layout.css */
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: 20px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.75rem;
+}
+
+.status-pill {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 16px;
+  }
+
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+/* src/css/tokens.css */
+:root {
+  color-scheme: dark;
+  --bg: #0b1020;
+  --panel: #151d33;
+  --panel-border: #28324f;
+  --text: #edf2ff;
+  --muted: #9aa8c7;
+  --accent: #7c3aed;
+  --accent-soft: rgba(124, 58, 237, 0.18);
+  --radius: 18px;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+</style>
+  </head>
+  <body data-app="hueprotab">
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">HueProTab</p>
+          <h1>Foundation build</h1>
+        </div>
+        <p class="status-pill" data-build-status>Build pending</p>
+      </header>
+      <main id="app-root"></main>
+    </div>
+    <template data-template="components/light-card">
+<article class="card light-card">
+  <h3>Light card</h3>
+  <p>Per-light power, brightness, and color controls will render here.</p>
+</article>
+</template>
+
+<template data-template="components/quick-access">
+<article class="card quick-access-card">
+  <h3>Quick Access tile</h3>
+  <p>Pinned lights, rooms, scenes, and quick actions will render here.</p>
+</article>
+</template>
+
+<template data-template="components/room-card">
+<article class="card room-card">
+  <h3>Room card</h3>
+  <p>Room and zone state, scene chips, and group controls will render here.</p>
+</article>
+</template>
+
+<template data-template="components/scene-card">
+<article class="card scene-card">
+  <h3>Scene card</h3>
+  <p>Scene activation and favorites will render here.</p>
+</article>
+</template>
+
+<template data-template="views/dashboard">
+<section class="panel panel-dashboard" data-view="dashboard">
+  <h2>Dashboard skeleton</h2>
+  <div class="dashboard-grid">
+    <section class="dashboard-section"><h3>Quick Access</h3></section>
+    <section class="dashboard-section"><h3>Rooms</h3></section>
+    <section class="dashboard-section"><h3>Lights</h3></section>
+    <section class="dashboard-section"><h3>Scenes</h3></section>
+  </div>
+</section>
+</template>
+
+<template data-template="views/settings">
+<section class="panel panel-settings" data-view="settings">
+  <h2>Settings skeleton</h2>
+  <p>Preferences, hidden sections, favorites, and bridge recovery will live here.</p>
+</section>
+</template>
+
+<template data-template="views/setup">
+<section class="panel panel-setup" data-view="setup">
+  <h2>Bridge setup</h2>
+  <p>Discover or enter a Hue bridge, then pair once and save it to this device.</p>
+</section>
+</template>
+    <script>
+// src/js/app.js
+(function bootstrapHueProTab() {
+  const app = window.HueProTab || {};
+  const root = document.querySelector('#app-root');
+  const status = document.querySelector('[data-build-status]');
+  if (!root || !status) {
+    return;
+  }
+
+  const orderedViews = (app.config?.views ?? []).map((name) => {
+    return document.querySelector(`template[data-template="${name}"]`)?.innerHTML ?? '';
+  });
+
+  root.innerHTML = orderedViews.join('\n');
+  status.textContent = 'Foundation build ready';
+})();
+
+// src/js/config.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.config = {
+  appName: 'HueProTab',
+  views: ['views/setup', 'views/dashboard', 'views/settings']
+};
+
+// src/js/services/discovery.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.services = window.HueProTab.services || {};
+window.HueProTab.services.discovery = {
+  discover() {
+    return [];
+  }
+};
+
+// src/js/services/hue-client.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.services = window.HueProTab.services || {};
+window.HueProTab.services.hueClient = {
+  fetchSnapshot() {
+    return { lights: [], rooms: [], scenes: [] };
+  }
+};
+
+// src/js/services/pairing.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.services = window.HueProTab.services || {};
+window.HueProTab.services.pairing = {
+  begin() {
+    return { status: 'idle' };
+  }
+};
+
+// src/js/state/preferences.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.preferences = {
+  hiddenSections: [],
+  pinnedItems: []
+};
+
+// src/js/state/store.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.state = {
+  buildStage: 'foundation',
+  bridgeStatus: 'unpaired'
+};
+
+// src/js/ui/components/color-picker.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.ui = window.HueProTab.ui || {};
+window.HueProTab.ui.components = window.HueProTab.ui.components || {};
+window.HueProTab.ui.components.colorPicker = 'foundation-placeholder';
+
+// src/js/ui/components/light-card.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.ui = window.HueProTab.ui || {};
+window.HueProTab.ui.components = window.HueProTab.ui.components || {};
+window.HueProTab.ui.components.lightCard = 'template:data-template="components/light-card"';
+
+// src/js/ui/components/quick-access.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.ui = window.HueProTab.ui || {};
+window.HueProTab.ui.components = window.HueProTab.ui.components || {};
+window.HueProTab.ui.components.quickAccess = 'template:data-template="components/quick-access"';
+
+// src/js/ui/components/room-card.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.ui = window.HueProTab.ui || {};
+window.HueProTab.ui.components = window.HueProTab.ui.components || {};
+window.HueProTab.ui.components.roomCard = 'template:data-template="components/room-card"';
+
+// src/js/ui/components/scene-card.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.ui = window.HueProTab.ui || {};
+window.HueProTab.ui.components = window.HueProTab.ui.components || {};
+window.HueProTab.ui.components.sceneCard = 'template:data-template="components/scene-card"';
+
+// src/js/ui/render-dashboard.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.ui = window.HueProTab.ui || {};
+window.HueProTab.ui.renderDashboard = function renderDashboard() {
+  return document.querySelector('template[data-template="views/dashboard"]')?.innerHTML ?? '';
+};
+
+// src/js/ui/render-setup.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.ui = window.HueProTab.ui || {};
+window.HueProTab.ui.renderSetup = function renderSetup() {
+  return document.querySelector('template[data-template="views/setup"]')?.innerHTML ?? '';
+};
+
+// src/js/ui/router.js
+window.HueProTab = window.HueProTab || {};
+window.HueProTab.ui = window.HueProTab.ui || {};
+window.HueProTab.ui.router = {
+  viewOrder: ['views/setup', 'views/dashboard', 'views/settings']
+};
+</script>
+  </body>
+</html>
