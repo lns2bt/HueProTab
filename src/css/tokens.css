@@ -3,10 +3,12 @@
   --bg: #0b1020;
   --panel: #151d33;
   --panel-border: #28324f;
+  --panel-muted: #1e2742;
   --text: #edf2ff;
   --muted: #9aa8c7;
   --accent: #7c3aed;
   --accent-soft: rgba(124, 58, 237, 0.18);
+  --focus-ring: #c4b5fd;
   --radius: 18px;
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
