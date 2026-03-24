@@ -76,6 +76,23 @@ button {
   color: white;
 }
 
+.topbar-button {
+  border: 1px solid transparent;
+  background: var(--accent);
+  color: white;
+}
+
+.topbar-button-secondary {
+  border-color: var(--panel-border);
+  background: var(--panel-muted);
+  color: var(--text);
+}
+
+.topbar-button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 /* src/css/layout.css */
 .app-shell {
   max-width: 1200px;
@@ -89,6 +106,14 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .eyebrow {
@@ -155,6 +180,10 @@ button {
     align-items: flex-start;
     flex-direction: column;
   }
+
+  .topbar-actions {
+    justify-content: flex-start;
+  }
 }
 
 /* src/css/tokens.css */
@@ -163,10 +192,12 @@ button {
   --bg: #0b1020;
   --panel: #151d33;
   --panel-border: #28324f;
+  --panel-muted: #1e2742;
   --text: #edf2ff;
   --muted: #9aa8c7;
   --accent: #7c3aed;
   --accent-soft: rgba(124, 58, 237, 0.18);
+  --focus-ring: #c4b5fd;
   --radius: 18px;
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
@@ -177,9 +208,13 @@ button {
       <header class="topbar">
         <div>
           <p class="eyebrow">HueProTab</p>
-          <h1>Foundation build</h1>
+          <h1>Dashboard control shell</h1>
         </div>
-        <p class="status-pill" data-build-status>Build pending</p>
+        <div class="topbar-actions">
+          <p class="status-pill" data-build-status>Bridge offline</p>
+          <button type="button" class="topbar-button topbar-button-secondary" data-action="refresh">Refresh</button>
+          <button type="button" class="topbar-button" data-action="settings">Settings</button>
+        </div>
       </header>
       <main id="app-root"></main>
     </div>
@@ -215,15 +250,15 @@ button {
 <section class="panel panel-dashboard" data-view="dashboard">
   <div class="panel-header">
     <div>
-      <h2>Dashboard skeleton</h2>
+      <h2>Dashboard</h2>
       <p data-dashboard-summary>0 rooms • 0 lights (0 on) • 0 scenes</p>
     </div>
   </div>
-  <div class="dashboard-grid">
-    <section class="dashboard-section"><h3>Quick Access</h3></section>
-    <section class="dashboard-section"><h3>Rooms</h3></section>
-    <section class="dashboard-section"><h3>Lights</h3></section>
-    <section class="dashboard-section"><h3>Scenes</h3></section>
+  <div class="dashboard-grid" data-dashboard-grid>
+    <section class="dashboard-section" data-section="quick-access"><h3>Quick Access</h3></section>
+    <section class="dashboard-section" data-section="rooms"><h3>Rooms</h3></section>
+    <section class="dashboard-section" data-section="lights"><h3>Lights</h3></section>
+    <section class="dashboard-section" data-section="scenes"><h3>Scenes</h3></section>
   </div>
 </section>
 </template>
@@ -616,7 +651,16 @@ window.HueProTab.ui.renderSetup = function renderSetup() {
 window.HueProTab = window.HueProTab || {};
 window.HueProTab.ui = window.HueProTab.ui || {};
 window.HueProTab.ui.router = {
-  viewOrder: ['views/setup', 'views/dashboard', 'views/settings']
+  viewOrder: ['views/setup', 'views/dashboard', 'views/settings'],
+  activeView: 'views/dashboard',
+  setActiveView(viewName) {
+    if (!this.viewOrder.includes(viewName)) {
+      return this.activeView;
+    }
+
+    this.activeView = viewName;
+    return this.activeView;
+  }
 };
 </script>
   </body>

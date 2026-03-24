@@ -227,7 +227,7 @@ test('dashboard shell exposes quick access, rooms, lights, and scenes sections',
 Run: `node --test tests/ui/dashboard-shell.test.mjs -v`
 Expected: FAIL because the shell does not yet include the dashboard sections.
 
-- [ ] **Step 3: Implement the shell and responsive layout**
+- [x] **Step 3: Implement the shell and responsive layout**
 
 ```html
 <section data-section="quick-access"><h2>Quick Access</h2></section>
@@ -246,12 +246,12 @@ Expected: FAIL because the shell does not yet include the dashboard sections.
 }
 ```
 
-- [ ] **Step 4: Rebuild and run tests**
+- [x] **Step 4: Rebuild and run tests**
 
 Run: `node scripts/build-single-html.mjs && node --test tests/ui/dashboard-shell.test.mjs -v`
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/css src/html src/js/ui tests/ui dist/index.html
